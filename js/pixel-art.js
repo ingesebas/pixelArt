@@ -20,36 +20,21 @@ var nombreColores = ['White', 'LightYellow',
   'DimGray', 'LightSlateGray', 'DarkSlateGray', 'Black'
 ];
 
-// Variable jQuery para guardar el elemento "color-personalizado"
-// Es decir, el que se elige con la rueda de color.
-var $colorPersonalizado = $("#color-personalizado");
-
-$colorPersonalizado.change(function() {
-  // Se guarda el color de la rueda en colorActual
-  var colorActual = $colorPersonalizado.val();
-  // Completar para que cambie el indicador-de-color al colorActual
-});
-
+//Se definen variables para guardar los colores del array y
+//tomar el css para poder armar la grilla
 var $paleta = $("#paleta");
 var $grillaPixeles = $("#grilla-pixeles");
 
-// Funcion para generar la paleta de colores
-// $(nombreColores).each(function paletaDeColores(){
-//   var $nuevoColor = $("<div>", {"class": "color-paleta"});
-//   $paleta.append($nuevoColor);
-//   $nuevoColor.css("background-color", nombreColores );
-// });
-
-// Mostrar la paleta de colores
+// Funcion para mostrar en el HTML la paleta de colores
 function paletaDeColores(){
-  for (var color of nombreColores) {
+  for (var nombreColor of nombreColores) {
     var $nuevoColor = $("<div>", {"class": "color-paleta"});
     $paleta.append($nuevoColor);
-    $nuevoColor.css("background-color", color);
+    $nuevoColor.css("background-color", nombreColor);
   };
 };
 
-// Mostrar la grilla
+// Funcion para mostrar en el HTML la grilla de pixeles
 function grilla(){
   for (var i = 0; i < 1749; i++) {
     var $nuevoPixel = $("<div>");
@@ -58,6 +43,64 @@ function grilla(){
   };
 };
 
+//Se define variable para indicar color seleccionado
+var $indicadorDeColor = $("#indicador-de-color");
+var $indicadorDeColorMensaje = $("#indicador-de-color-mensaje");
 
+//Funcion para seleccionar color de la Paleta de colores
+$paleta.click(function seleccionarColor(event){
+  colorActual = $(event.target).css("background-color");
+  cambiarIndicadorDeColor(colorActual);
+});
+
+//y mostrar el color seleccionado en el indicador de color
+function cambiarIndicadorDeColor(color){
+  $indicadorDeColor.css("background-color", color);
+  $indicadorDeColorMensaje.text("Pincel: " + color);
+};
+
+//funciona para pintar un Pixel
+$grillaPixeles.click(function pintarPixel(event){
+  colorActual = $indicadorDeColor.css("background-color");
+  $(event.target).css("background-color", colorActual);
+});
+
+// Variable que se elige con la rueda de color.
+var $colorPersonalizado = $("#color-personalizado");
+
+//funciona para tomar color de rueda en el indicadorDeColor
+$colorPersonalizado.change(function(){
+  colorActual = $colorPersonalizado.val();
+  cambiarIndicadorDeColor(colorActual);
+});
+
+//Variable que define valor por defecto del mouse
+var mouseApretado = false;
+
+
+//funciones que definen si el mouse esta apretado o no.
+function apretarMouse(){
+  mouseApretado = true;
+};
+function soltarMouse(){
+  mouseApretado = false;
+};
+
+//funcion para pintar con el mouse en movimiento
+function pintarEnMovimiento(event){
+  if (mouseApretado) {
+    pintarPixel(event);
+  };
+};
+
+//funciones para pintar con el mouse apretado y en movimiento
+$grillaPixeles.mousedown(apretarMouse);
+$grillaPixeles.mousemove(pintarEnMovimiento);
+
+//funcion para soltar mouse cuando este fuera de la grilla
+$(window).mouseup(soltarMouse);
+
+
+var valorColorPersonalizado = $colorPersonalizado.val();
 paletaDeColores ();
 grilla ();
