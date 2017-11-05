@@ -60,10 +60,11 @@ function cambiarIndicadorDeColor(color){
 };
 
 //funciona para pintar un Pixel
-$grillaPixeles.click(function pintarPixel(event){
+$grillaPixeles.click(pintarPixel);
+function pintarPixel(event){
   colorActual = $indicadorDeColor.css("background-color");
   $(event.target).css("background-color", colorActual);
-});
+};
 
 // Variable que se elige con la rueda de color.
 var $colorPersonalizado = $("#color-personalizado");
@@ -100,7 +101,18 @@ $grillaPixeles.mousemove(pintarEnMovimiento);
 //funcion para soltar mouse cuando este fuera de la grilla
 $(window).mouseup(soltarMouse);
 
+//definir variable de botón borrar
+var $borrar = $("#borrar");
 
-var valorColorPersonalizado = $colorPersonalizado.val();
+//Funcion borrado animado
+$borrar.click(borrarPantalla);
+function borrarPantalla (){
+  var $divGrilla = $("#grilla-pixeles div");
+  $divGrilla.each(function (){
+    $(this).animate({"backgroundColor": "white"}, 3500 );
+  });
+}
+
+
 paletaDeColores ();
 grilla ();
